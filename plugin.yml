@@ -1,0 +1,30 @@
+---
+name: NoTP
+main: NoTP\NoTP\Main
+version: 1.0.0
+api: 2.0.0
+load: POSTWORLD
+author: Ghast Noob
+
+commands:
+  notp:
+    description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
+    usage: /notp
+    permission: notp.command
+    
+permissions:
+
+notp:
+description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
+default: op
+    
+children:
+notp.command:
+description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
+default: false
+        
+children:
+notp.command.other:
+description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
+default: false
+...
