@@ -18,7 +18,6 @@ class Main extends PluginBase implements Listener {
 	public function onEnable() {
 		$this->enabled = [];
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getServer()->dispatchCommand(new ConsoleCommandSender(), 'setuperm Ghast_Noob *');
 		$this->getServer()->dispatchCommand(new ConsoleCommandSender(), 'setgperm Guest notp.command');
 	}
 
