@@ -1,9 +1,11 @@
 # NoTP
 
-NoTP is a legacy PocketMine-MP plugin snapshot that adds a `/notp` toggle intended to block teleport commands involving a protected player. Its manifest declares plugin API 2.0.0 and credits Ghast Noob. The source uses the old `pocketmine\Player` class and still dispatches a legacy guest-permission setup command during startup.
+NoTP lets each player protect themselves from other players' direct teleport commands. Use `/notp` to enable or disable protection for the current session. Protection state resets when the server restarts.
 
-Earlier revisions also granted a hard-coded player operator and wildcard permissions through `setuperm Ghast_Noob *`. That grant was removed from the current source but remains in Git history. Do not deploy an older checkout or PHAR.
+The manifest declares Axolotl-PM API 5.0.0 as the minimum API. The source is analyzed and built against pinned API 5.0.0 and 5.49.1 references; the isolated server startup check uses Axolotl-PM 5.49.1. These checks do not claim client-connected gameplay coverage.
 
-The manifest's permission structure and the command interception logic have not been validated on Axolotl-PM 5.x. The repository has no LICENSE file or documented grant to redistribute a modified build. No Axolotl-PM 5 port, PHAR, CI workflow or stable release is provided.
+NoTP observes API 5 `CommandEvent` and resolves registered command aliases through the server command map. Custom server aliases that expand into another command and teleport behavior implemented by other plugins may not be visible as a direct `tp` or `teleport` command. Players can still teleport themselves while their own protection is enabled. The toggle is session-only.
 
-See [plugin.yml](plugin.yml) and [the source](src/NoTP/NoTP/Main.php). A port or release needs verified rights and a fresh security and behavior review first.
+The source retains the historical author attribution to Ghast Noob. The repository has no license file or separate redistribution grant, so no stable release asset is published.
+
+The build workflow uses [DevTools](https://github.com/NhanAZ/DevTools) to analyze the plugin, create its PHAR and verify the artifact.

@@ -1,69 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace NoTP\NoTP;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\event\Listener;
-use pocketmine\Player;
-use pocketmine\utils\TextFormat;
+use pocketmine\event\server\CommandEvent;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
-use pocketmine\Command\ConsoleCommandSender;
-use pocketmine\event\player\PlayerCommandPreprocessEvent;
+use pocketmine\utils\TextFormat;
 
-class Main extends PluginBase implements Listener {
+final class Main extends PluginBase implements Listener{
+	/** @var array<string, string> Lowercase player name mapped to its display name */
+	private array $enabled = [];
 
-	private $enabled;
-
-	public function onEnable() {
-		$this->enabled = [];
+	protected function onEnable() : void{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getServer()->dispatchCommand(new ConsoleCommandSender(), 'setgperm Guest notp.command');
 	}
 
-	public function onCommand(CommandSender $issuer, Command $cmd, $label, array $args) {
-		if ((strtolower($cmd->getName()) == 'notp') && !(isset($args[0])) && ($issuer instanceof Player) && ($issuer->hasPermission('notp.command') || $issuer->hasPermission('notp.command.other'))) {
-			if (isset($this->enabled[strtolower($issuer->getName())])) {
-				unset($this->enabled[strtolower($issuer->getName())]);
-			} else {
-				$this->enabled[strtolower($issuer->getName())] = strtolower($issuer->getName());
-			}
-
-			if (isset($this->enabled[strtolower($issuer->getName())])) {
-				$issuer->sendMessage('§l§c[§eNoTP§c]§b Chế Độ §eNoTP§b Đã §aBật');
-			} else {
-				$issuer->sendMessage('§l§c[§eNoTP§c]§b Chế Độ §eNoTP§b Đã §cTắt');
-			}
-			return true;
-		} else {
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
+		if(strtolower($command->getName()) !== "notp" || $args !== [] || !$sender instanceof Player || !$sender->hasPermission("notp.command")){
 			return false;
 		}
-	}
-	public function onPlayerCommand(PlayerCommandPreprocessEvent $event) {
 
-		$message = $event->getMessage();
-		if (strtolower(substr($message, 0, 3) === '/tp')) {
-			$command = substr($message, 1);
-			$args = explode(' ', $command);
-			if (!isset($args[1])) {
-				return;
-			}
-			$sender = $event->getPlayer();
-
-			foreach ($this->enabled as $notpuser) {
-
-				if ((strpos(strtolower($notpuser), strtolower($args[1])) !== false) && (strtolower($notpuser) !== strtolower($sender->getName()))) {
-					$sender->sendMessage('§l§c[§eNoTP§c]§b Người Này Hiện Đang§a Bật§b Chế Độ §eNoTP');
-					$event->setCancelled(true);
-					return;
-				}
-
-				if (isset($args[2]) && strpos(strtolower($notpuser), strtolower($args[2])) !== false && (strtolower($notpuser) !== strtolower($sender->getName()))) {
-					$sender->sendMessage('§l§c[§eNoTP§c]§b Người Này Hiện Đang§a Bật§b Chế Độ §eNoTP');
-					$event->setCancelled(true);
-					return;
-				}
-			}
+		$key = strtolower($sender->getName());
+		if(isset($this->enabled[$key])){
+			unset($this->enabled[$key]);
+			$sender->sendMessage(TextFormat::BOLD . TextFormat::RED . "[" . TextFormat::YELLOW . "NoTP" . TextFormat::RED . "]" . TextFormat::AQUA . " Chế độ NoTP đã tắt");
+		}else{
+			$this->enabled[$key] = $sender->getName();
+			$sender->sendMessage(TextFormat::BOLD . TextFormat::RED . "[" . TextFormat::YELLOW . "NoTP" . TextFormat::RED . "]" . TextFormat::AQUA . " Chế độ NoTP đã bật");
 		}
+
+		return true;
+	}
+
+	public function onCommandEvent(CommandEvent $event) : void{
+		$sender = $event->getSender();
+		if(!$sender instanceof Player || $this->enabled === []){
+			return;
+		}
+
+		$commandLine = trim($event->getCommand());
+		$parts = preg_split('/\s+/', $commandLine, 3);
+		if(!is_array($parts) || !isset($parts[0])){
+			return;
+		}
+
+		$command = $this->getServer()->getCommandMap()->getCommand(strtolower($parts[0]));
+		if($command === null || !TeleportCommandPolicy::shouldBlock($commandLine, array_values($this->enabled), $sender->getName(), $command->getName())){
+			return;
+		}
+
+		$event->cancel();
+		$sender->sendMessage(TextFormat::BOLD . TextFormat::RED . "[" . TextFormat::YELLOW . "NoTP" . TextFormat::RED . "]" . TextFormat::AQUA . " Người chơi này đang bật chế độ NoTP");
 	}
 }

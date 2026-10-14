@@ -1,30 +1,20 @@
 ---
 name: NoTP
 main: NoTP\NoTP\Main
-version: 1.0.0
-api: 2.0.0
+version: 2.0.0
+api: 5.0.0
 load: POSTWORLD
 author: Ghast Noob
+description: Toggle protection against player teleport commands targeting you
 
 commands:
   notp:
-    description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
+    description: Toggle protection against player teleport commands targeting you
     usage: /notp
     permission: notp.command
-    
-permissions:
 
-notp:
-description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
-default: op
-    
-children:
-notp.command:
-description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
-default: false
-        
-children:
-notp.command.other:
-description: Chặn Người Khác TP Mình Đến Họ Cũng Như Họ TP Đến Mình
-default: false
+permissions:
+  notp.command:
+    description: Allows a player to toggle their own NoTP protection
+    default: true
 ...
