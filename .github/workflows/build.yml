@@ -57,8 +57,6 @@ jobs:
       phpstan: max
       axolotl-ref: ${{ matrix.ref }}
       artifact-name: notp-api-${{ matrix.label }}-${{ github.sha }}
-      retention-days: 14
-
   runtime-smoke:
     name: Start NoTP on Axolotl-PM 5.51.1
     needs: [source-checks, build]
