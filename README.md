@@ -8,3 +8,8 @@ Session-only player teleport protection for Axolotl-PM API 5.
 
 
 Session-only player teleport protection for Axolotl-PM API 5.
+
+
+## Credits
+
+Authors: NhanAZ.
