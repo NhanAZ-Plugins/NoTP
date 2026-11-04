@@ -4,7 +4,7 @@ main: NoTP\NoTP\Main
 version: 2.0.0
 api: 5.0.0
 load: POSTWORLD
-author: Ghast Noob
+author: NhanAZ
 description: Toggle protection against player teleport commands targeting you
 
 commands:
