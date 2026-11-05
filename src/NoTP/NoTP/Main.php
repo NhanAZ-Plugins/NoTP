@@ -28,10 +28,10 @@ final class Main extends PluginBase implements Listener{
 		$key = strtolower($sender->getName());
 		if(isset($this->enabled[$key])){
 			unset($this->enabled[$key]);
-			$sender->sendMessage(TextFormat::BOLD . TextFormat::RED . "[" . TextFormat::YELLOW . "NoTP" . TextFormat::RED . "]" . TextFormat::AQUA . " Chế độ NoTP đã tắt");
+			$sender->sendMessage(TextFormat::GOLD . "[NoTP] " . TextFormat::AQUA . "Teleport protection disabled.");
 		}else{
 			$this->enabled[$key] = $sender->getName();
-			$sender->sendMessage(TextFormat::BOLD . TextFormat::RED . "[" . TextFormat::YELLOW . "NoTP" . TextFormat::RED . "]" . TextFormat::AQUA . " Chế độ NoTP đã bật");
+			$sender->sendMessage(TextFormat::GOLD . "[NoTP] " . TextFormat::AQUA . "Teleport protection enabled.");
 		}
 
 		return true;
@@ -55,6 +55,6 @@ final class Main extends PluginBase implements Listener{
 		}
 
 		$event->cancel();
-		$sender->sendMessage(TextFormat::BOLD . TextFormat::RED . "[" . TextFormat::YELLOW . "NoTP" . TextFormat::RED . "]" . TextFormat::AQUA . " Người chơi này đang bật chế độ NoTP");
+		$sender->sendMessage(TextFormat::GOLD . "[NoTP] " . TextFormat::RED . "That player has NoTP protection enabled.");
 	}
 }
